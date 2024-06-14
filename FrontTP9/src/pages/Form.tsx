@@ -8,11 +8,17 @@ import {
   updateInstrumento,
 } from "../services/InstrumentoCRUD";
 import { getCategorias } from "../services/CategoriaCRUD";
-import "../assets/styles/FormInstrumento.css";
+import { Box, Button, Grid, TextField } from "@mui/material";
 
 function Form() {
   const navigate = useNavigate();
   const { id } = useParams();
+
+  function getRandomIntInRange(min: number, max: number): number {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
 
   const [instrumento, setInstrumento] = useState<Instrumento>(
     new Instrumento()
@@ -89,9 +95,10 @@ function Form() {
       if (instrumento && instrumento.id) {
         await updateInstrumento(instrumento);
       } else {
+        instrumento.id = `${getRandomIntInRange(11, 500)}`;
         await createInstrumento(instrumento);
       }
-      navigate("/tabla");
+      navigate("/grilla");
     } catch (error) {
       console.error("Error al guardar el instrumento:", error);
       setTxtValidacion(
@@ -100,197 +107,168 @@ function Form() {
     }
   };
 
-  const eliminarInstrumento = async () => {
-    try {
-      await deleteInstrumento(instrumento.id);
-      navigate("/tabla");
-    } catch (error) {
-      console.error("Error al eliminar el instrumento:", error);
-      setTxtValidacion(
-        "Error al eliminar el instrumento. Por favor, inténtelo de nuevo más tarde."
-      );
-    }
-  };
-
   return (
     <>
-      <div className="center">
-        <div className="mb-3">
-          <label htmlFor="txtNombre" className="form-label">
-            Nombre
-          </label>
-          <input
-            type="text"
-            id="txtNombre"
-            className="form-control"
-            placeholder="Ingrese el nombre"
-            value={instrumento.instrumento || ""}
-            onChange={(e) =>
-              setInstrumento({ ...instrumento, instrumento: e.target.value })
-            }
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="txtMarca" className="form-label">
-            Marca
-          </label>
-          <input
-            type="text"
-            id="txtMarca"
-            className="form-control"
-            placeholder="Ingrese la marca"
-            value={instrumento.marca || ""}
-            onChange={(e) =>
-              setInstrumento({ ...instrumento, marca: e.target.value })
-            }
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="txtModelo" className="form-label">
-            Modelo
-          </label>
-          <input
-            type="text"
-            id="txtModelo"
-            className="form-control"
-            placeholder="Ingrese el modelo"
-            value={instrumento.modelo || ""}
-            onChange={(e) =>
-              setInstrumento({ ...instrumento, modelo: e.target.value })
-            }
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="txtPrecio" className="form-label">
-            Precio
-          </label>
-          <input
-            type="number"
-            id="txtPrecio"
-            className="form-control"
-            placeholder="Ingrese el precio"
-            value={instrumento.precio || 0}
-            onChange={(e) =>
-              setInstrumento({
-                ...instrumento,
-                precio: parseFloat(e.target.value),
-              })
-            }
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="txtImagen" className="form-label">
-            Imagen
-          </label>
-          <input
-            type="text"
-            id="txtImagen"
-            className="form-control"
-            placeholder="Ingrese la URL de la imagen"
-            value={instrumento.imagen || ""}
-            onChange={(e) =>
-              setInstrumento({ ...instrumento, imagen: e.target.value })
-            }
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="txtCostoEnvio" className="form-label">
-            Costo de Envío
-          </label>
-          <input
-            type="text"
-            id="txtCostoEnvio"
-            className="form-control"
-            placeholder="Ingrese el costo de envío"
-            value={instrumento.costoEnvio || ""}
-            onChange={(e) =>
-              setInstrumento({ ...instrumento, costoEnvio: e.target.value })
-            }
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="txtCantidadVendida" className="form-label">
-            Cantidad Vendida
-          </label>
-          <input
-            type="number"
-            id="txtCantidadVendida"
-            className="form-control"
-            placeholder="Ingrese la cantidad vendida"
-            value={instrumento.cantidadVendida || 0}
-            onChange={(e) =>
-              setInstrumento({
-                ...instrumento,
-                cantidadVendida: parseFloat(e.target.value),
-              })
-            }
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="txtDescripcion" className="form-label">
-            Descripción
-          </label>
-          <textarea
-            id="txtDescripcion"
-            className="form-control"
-            placeholder="Ingrese la descripción"
-            value={instrumento.descripcion || ""}
-            onChange={(e) =>
-              setInstrumento({ ...instrumento, descripcion: e.target.value })
-            }
-          ></textarea>
-        </div>
-        <div className="mb-3">
-          <label htmlFor="cmbCategoria" className="form-label">
-            Categoría
-          </label>
-          <select
-            id="cmbCategoria"
-            className="form-select"
-            value={instrumento.categoria ? instrumento.categoria.id : ""}
-            onChange={(e) =>
-              setInstrumento({
-                ...instrumento,
-                categoria: { id: parseInt(e.target.value), denominacion: "" },
-              })
-            }
-          >
-            <option value="">Seleccione una categoría</option>
-            {categorias.map((categoria) => (
-              <option key={categoria.id} value={categoria.id}>
-                {categoria.denominacion}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <p style={{ color: "red", lineHeight: 5, padding: 5 }}>
-            {txtValidacion}
-          </p>
-        </div>
-        <div className="col">
-          <button
-            onClick={guardarInstrumento}
-            className="btn btn-success"
-            type="button"
-          >
-            Guardar
-          </button>
-          <button
-            onClick={eliminarInstrumento}
-            className="btn btn-danger"
-            type="button"
-          >
-            Eliminar
-          </button>
-          <a href={`/tabla`} style={{ marginLeft: 25 }}>
-            <button type="button" className="btn btn-warning">
-              Volver
-            </button>
-          </a>
-        </div>
-      </div>
+      <Box
+        sx={{
+          bgcolor: "#eee",
+          width: "70%",
+          borderRadius: 8,
+          padding: 2,
+          height: "100vh",
+        }}
+      >
+        <form>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                name="name"
+                label="Nombre"
+                placeholder="Ingrese el nombre"
+                value={instrumento.instrumento || ""}
+                onChange={(e) =>
+                  setInstrumento({
+                    ...instrumento,
+                    instrumento: e.target.value,
+                  })
+                }
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                name="marca"
+                label="Marca"
+                placeholder="Ingrese la marca"
+                value={instrumento.marca || ""}
+                onChange={(e) =>
+                  setInstrumento({ ...instrumento, marca: e.target.value })
+                }
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                name="modelo"
+                label="Modelo"
+                placeholder="Ingrese el modelo"
+                value={instrumento.modelo || ""}
+                onChange={(e) =>
+                  setInstrumento({ ...instrumento, modelo: e.target.value })
+                }
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                type="number"
+                name="precio"
+                label="Precio"
+                placeholder="Ingrese el precio"
+                value={instrumento.precio || 0}
+                onChange={(e) =>
+                  setInstrumento({
+                    ...instrumento,
+                    precio: parseFloat(e.target.value),
+                  })
+                }
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                name="costoEnvio"
+                label="Costo de Envio"
+                placeholder="Ingrese el costo de envío"
+                value={instrumento.costoEnvio || ""}
+                onChange={(e) =>
+                  setInstrumento({ ...instrumento, costoEnvio: e.target.value })
+                }
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                type="number"
+                name="cantidadVendida"
+                label="Cantidad Vendida"
+                placeholder="Ingrese la cantidad vendida"
+                value={instrumento.cantidadVendida || 0}
+                onChange={(e) =>
+                  setInstrumento({
+                    ...instrumento,
+                    cantidadVendida: parseFloat(e.target.value),
+                  })
+                }
+              />
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <TextField
+                fullWidth
+                name="txtDescripcion"
+                label="Descripcion"
+                placeholder="Ingrese la descripción"
+                multiline
+                value={instrumento.descripcion || ""}
+                onChange={(e) =>
+                  setInstrumento({
+                    ...instrumento,
+                    descripcion: e.target.value,
+                  })
+                }
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <select
+                id="cmbCategoria"
+                className="form-select"
+                value={instrumento.categoria ? instrumento.categoria.id : ""}
+                onChange={(e) =>
+                  setInstrumento({
+                    ...instrumento,
+                    categoria: {
+                      id: parseInt(e.target.value),
+                      denominacion: "",
+                    },
+                  })
+                }
+              >
+                <option value="">Seleccione una categoría</option>
+                {categorias.map((categoria) => (
+                  <option key={categoria.id} value={categoria.id}>
+                    {categoria.denominacion}
+                  </option>
+                ))}
+              </select>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                name="txtImagen"
+                label="Imagen"
+                placeholder="Ingrese la URL de la imagen"
+                value={instrumento.imagen || ""}
+                onChange={(e) =>
+                  setInstrumento({ ...instrumento, imagen: e.target.value })
+                }
+              />
+            </Grid>
+            <div>
+              <p style={{ color: "red", lineHeight: 5, padding: 5 }}>
+                {txtValidacion}
+              </p>
+            </div>
+            <Grid item xs={12}>
+              <Box>
+                <Button
+                  onClick={guardarInstrumento}
+                  className="btn btn-success"
+                  type="button"
+                >
+                  Guardar
+                </Button>
+                <a href={`/grilla`} style={{ marginLeft: 25 }}>
+                  <Button variant="contained">Volver</Button>
+                </a>
+              </Box>
+            </Grid>
+          </Grid>
+        </form>
+      </Box>
     </>
   );
 }

@@ -1,4 +1,5 @@
 class Categoria {
+    id?: number;
     denominacion: string = "";
 }
 

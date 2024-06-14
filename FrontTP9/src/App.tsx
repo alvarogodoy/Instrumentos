@@ -9,6 +9,7 @@ import RutaPrivada from "./routes/RutaPrivada";
 import Signup from "./pages/Signup";
 import Grilla from "./pages/Grilla";
 import Charts from "./pages/Charts";
+import Form from "./pages/Form";
 
 function App() {
   return (
@@ -18,12 +19,27 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/instrumentos" element={<Products />} />
       <Route path="/donde-estamos" element={<Where />} />
-      <Route path="/charts" element={<Charts />} />
       <Route path="/detalle/:id" element={<Detail />} />
+      <Route
+        path="/charts"
+        element={
+          <RutaPrivada rolesPermitidos={["Admin", "Operador"]}>
+            <Charts />
+          </RutaPrivada>
+        }
+      />
+      <Route
+        path="/formulario/:id"
+        element={
+          <RutaPrivada rolesPermitidos={["Admin"]}>
+            <Form />
+          </RutaPrivada>
+        }
+      />
       <Route
         path="/grilla"
         element={
-          <RutaPrivada>
+          <RutaPrivada rolesPermitidos={["Admin", "Operador"]}>
             <Grilla />
           </RutaPrivada>
         }

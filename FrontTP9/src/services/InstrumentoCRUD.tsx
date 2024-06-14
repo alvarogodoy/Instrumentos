@@ -19,7 +19,7 @@ export async function getInstrumentos() {
   return instrumentosActivos;
 }
 
-export async function getInstrumentoById(id: string) {
+export async function getInstrumentoById(id: number) {
   const url = "http://localhost:8080/api/instrumentos/" + id;
   const response = await fetch(url, {
     method: "GET",

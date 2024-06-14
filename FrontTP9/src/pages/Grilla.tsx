@@ -63,7 +63,11 @@ function Grilla() {
   };
 
   const handleCreate = () => {
-    navigate("/form/0");
+    navigate("/formulario/0");
+  };
+
+  const handleEdit = (id: string) => {
+    navigate(`/formulario/${id}`);
   };
 
   const instrumentosFiltrados = filtroCategoria
@@ -128,7 +132,9 @@ function Grilla() {
                     <Button onClick={() => eliminarInstrumento(instrumento)}>
                       Eliminar
                     </Button>
-                    <Button>Editar</Button>
+                    <Button onClick={() => handleEdit(instrumento.id)}>
+                      Editar
+                    </Button>
                   </TableCell>
                 ) : null}
               </TableRow>

@@ -1,7 +1,7 @@
 import Categoria from "./Categoria";
 
 class Instrumento  {
-    id:string = "0";
+    id?:string;
     instrumento: string = "0";
 	marca:string = "0";
 	modelo:string = "0";
